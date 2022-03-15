@@ -1,36 +1,32 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+#　ワークフローの名前
+name: Front-End CI Actions
+#　このワークフローがフックされるGitアクション
+on: [push, pull_request]
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+ #　ジョブの名前
+  lint-and-test:
+  #　動作させるOS
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    #　複数Node.jsバージョンのマトリックスで実施
+    strategy:
+      matrix:
+        node-version: [12.x]
+        #　ジョブ実行のステップシーケンス
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    #　GitHub　Actionが提供するアクション
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+      #　マトリックスの変数を使用
+        node-version: ${{ matrix.node-version }}
+        # コミュニティが提供するアクション
+    - uses: c-hive/gha-yarn-cache@v1
+    - name: Package Install
+      run: yarn
+    - name: TypeScript Compile
+      run: yarn lint:ts
+    - name: Jest UnitTest
+      run: yarn test
+    - name: ESLint linting
+      run: yarn eslint
