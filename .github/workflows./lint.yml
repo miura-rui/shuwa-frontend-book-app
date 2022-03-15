@@ -1,26 +1,26 @@
-#　ワークフローの名前
+#　1.ワークフローの名前
 name: Front-End CI Actions
-#　このワークフローがフックされるGitアクション
+#　2.このワークフローがフックされるGitアクション
 on: [push, pull_request]
 jobs:
- #　ジョブの名前
+ #　3.ジョブの名前
   lint-and-test:
-  #　動作させるOS
+  #　4.動作させるOS
     runs-on: ubuntu-latest
-    #　複数Node.jsバージョンのマトリックスで実施
+    #　5.複数Node.jsバージョンのマトリックスで実施
     strategy:
       matrix:
         node-version: [12.x]
-        #　ジョブ実行のステップシーケンス
+        #　6.ジョブ実行のステップシーケンス
     steps:
-    #　GitHub　Actionが提供するアクション
+    #　7.GitHub　Actionが提供するアクション
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-      #　マトリックスの変数を使用
+      #　8.マトリックスの変数を使用
         node-version: ${{ matrix.node-version }}
-        # コミュニティが提供するアクション
+        # 9.コミュニティが提供するアクション
     - uses: c-hive/gha-yarn-cache@v1
     - name: Package Install
       run: yarn
